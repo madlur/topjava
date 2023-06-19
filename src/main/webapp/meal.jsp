@@ -23,17 +23,19 @@
         <th></th>
         <th></th>
     </tr>
+    <c:set var = "counter" value="0" scope="page"/>
     <c:forEach var="meal" items="${meals}">
         <tr style="color:${meal.excess ? 'red' : 'black'}">
             <td>
-                <fmt:parseDate value="${ meal.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime"
+                <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime"
                                type="both"/>
-                <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }"/>
+                <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${parsedDateTime}"/>
             </td>
             <td><c:out value="${meal.description}"/></td>
             <td><c:out value="${meal.calories}"/></td>
-            <td><a href=""></a>Update</td>
-            <td><a href=""></a>Delete</td>
+            <td><a href="meals?update=<c:out value = "${counter}"/>">Update</a></td>
+            <td><a href="meals?delete=<c:out value = "${counter}"/>">Delete</a></td>
+        <c:set var="counter" value="${counter + 1}" scope="page"/>
         </tr>
     </c:forEach>
 </table>
