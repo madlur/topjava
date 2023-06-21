@@ -14,9 +14,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,7 +23,10 @@ public class MealsServlet extends HttpServlet {
 
     private int CALORIES_PER_DAY = 2000;
     private static final Logger log = getLogger(ru.javawebinar.topjava.web.MealsServlet.class);
+    private static String EDIT = "/meal.jsp";
+    private static String LIST_MEAL = "/meals.jsp";
     List<Meal> meals = new ArrayList<>();
+    List<MealTo> mealsTo = new ArrayList<>();
 
     {
         meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
@@ -37,22 +38,50 @@ public class MealsServlet extends HttpServlet {
         meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
     }
 
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) {
-        if (req.getParameterMap().containsKey("delete")) {
-            String parameter = req.getParameter("delete");
-            meals.remove(Integer.parseInt(parameter));
-        }
-        List<MealTo> mealToList = MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
-        req.setAttribute("meals", mealToList);
-    }
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to meals");
+        String forward = "";
+        String action = request.getParameter("action");
+        if (action == null) {
+            mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
+            request.setAttribute("meals", mealsTo);
+        } else if (action.equalsIgnoreCase("delete")) {
+            String mealId = request.getParameter("mealId");
+            meals.remove(Integer.parseInt(mealId));
+            forward = LIST_MEAL;
+            mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
+            request.setAttribute("meals", mealsTo);
+        } else if (action.equalsIgnoreCase("update")) {
+            forward = EDIT;
+            int mealToId = Integer.parseInt(request.getParameter("mealId"));
+            MealTo mealTo = mealsTo.get(mealToId);
+            request.setAttribute("meal", mealTo);
+            request.setAttribute("mealToId", mealToId);
+            System.out.println();
+        } else if (action.equalsIgnoreCase("listMeal")) {
+            forward = LIST_MEAL;
+            mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
+            request.setAttribute("meals", mealsTo);
+        } else if (action.equalsIgnoreCase("create")) {
+            forward = EDIT;
+        }
+        request.getRequestDispatcher(forward).forward(request, response);
+    }
 
-        processRequest(request, response);
-        request.getRequestDispatcher("/meal.jsp").forward(request, response);
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String description = req.getParameter("description");
+        LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dateTime"));
+        int calories = Integer.parseInt(req.getParameter("calories"));
+        String mealToId = req.getParameter("id");
+        if (!mealToId.isEmpty()) {
+            meals.remove(Integer.parseInt(mealToId));
+        }
+        Meal meal = new Meal(localDateTime, description, calories);
+        meals.add(meal);
+        resp.sendRedirect(req.getRequestURL().toString() + "?action=listMeal");
     }
 }
 
