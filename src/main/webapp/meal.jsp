@@ -13,6 +13,10 @@
 <h2>Meals</h2>
 <p>
 
+    <c:choose>
+        <c:when test="${not empty param.action}">
+            <h3>Edit meal</h3>
+            <br />
 <form method="POST" action='meals' name="editMeal">
     <table>
         <tr>
@@ -26,16 +30,46 @@
         </tr>
         <tr>
             <td><label>Description:</label></td>
-            <td><input type="text" value="<c:out value="${meal.description}"/>" name="description" required></td>
+            <td><input type="text" value="${meal.description}" name="description" required></td>
         </tr>
         <tr>
             <td><label>Calories:</label></td>
-            <td><input type="text" value="<c:out value="${meal.calories}"/>" name="calories" required></td>
+            <td><input type="number" value="${meal.calories}" name="calories" required></td>
+            <td hidden="true"><input type="number" value="${meal.id}" name="id"></td>
         </tr>
-        <td hidden="true"><input type="number" value="<c:out value="${mealToId}"/>" name="id"></td>
     </table>
     <input type="submit" value="Save"/>
-    <a href="meals?action=listMeal"><input type="button" value="Cancel"/></a>
+    <a href="meals"><input type="button" value="Cancel"/></a>
 </form>
+        </c:when>
+        <c:otherwise>
+            <h3>Add meal</h3>
+            <br />
+            <form method="POST" action='meals' name="createMeal">
+                <table>
+                    <tr>
+                        <td> DateTime:</td>
+                        <c:set var="now" value="<%=new java.util.Date()%>" />
+                        <td>
+                            <fmt:formatDate var="fmtDate" pattern="yyyy-MM-dd HH:mm" value="${now}"/>
+                            <input type="datetime-local" name="dateTime" value="${fmtDate}" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>Description:</label></td>
+                        <td><input type="text" name="description" value="" required></td>
+                    </tr>
+                    <tr>
+                        <td><label>Calories:</label></td>
+                        <td><input type="number" name="calories" value="" required></td>
+                    </tr>
+                </table>
+                <input type="submit" value="Save"/>
+                <a href="meals"><input type="button" value="Cancel"/></a>
+            </form>
+        </c:otherwise>
+    </c:choose>
+
+
 </body>
 </html>
