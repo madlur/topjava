@@ -56,21 +56,21 @@ public class MealsServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         log.debug("enter doPost method in MealsServlet");
         req.setCharacterEncoding("UTF-8");
-        if (req.getParameter("id") == null) {
+        if (req.getParameter("id").isEmpty()) {
             String description = req.getParameter("description");
             LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dateTime"));
             int calories = Integer.parseInt(req.getParameter("calories"));
-            mealsRepo.create(new Meal(localDateTime, description, calories));
+            mealsRepo.create(null, localDateTime, description, calories);
             log.debug("meal has been created");
         } else {
             Integer id = Integer.valueOf(req.getParameter("id"));
-            Meal meal = mealsRepo.getById(id);
-            meal.setDateTime(LocalDateTime.parse(req.getParameter("dateTime")));
-            meal.setDescription(req.getParameter("description"));
-            meal.setCalories(Integer.parseInt(req.getParameter("calories")));
+            String description = req.getParameter("description");
+            LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dateTime"));
+            int calories = Integer.parseInt(req.getParameter("calories"));
+            mealsRepo.update(id, localDateTime, description, calories);
             log.debug("meal has been updated");
         }
         resp.sendRedirect(req.getRequestURL().toString());

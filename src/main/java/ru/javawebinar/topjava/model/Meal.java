@@ -7,17 +7,17 @@ import java.time.LocalTime;
 public class Meal {
     private LocalDateTime dateTime;
 
-    private final Integer id = counter;
+    private final Integer id;
 
     private String description;
 
     private int calories;
 
-    public Meal(LocalDateTime dateTime, String description, int calories) {
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        incrementId();
     }
 
     public LocalDateTime getDateTime() {
@@ -42,12 +42,6 @@ public class Meal {
 
     public Integer getId() {
         return id;
-    }
-
-    private static int counter = 0;
-
-    private void incrementId() {
-        counter++;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
