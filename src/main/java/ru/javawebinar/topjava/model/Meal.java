@@ -3,11 +3,12 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Meal {
-    private LocalDateTime dateTime;
+    private Integer id;
 
-    private final Integer id;
+    private LocalDateTime dateTime;
 
     private String description;
 
@@ -44,6 +45,10 @@ public class Meal {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
@@ -59,8 +64,8 @@ public class Meal {
     @Override
     public String toString() {
         return "Meal{" +
-                "dateTime=" + dateTime +
-                ", id=" + id +
+                "id=" + id +
+                ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
                 '}';

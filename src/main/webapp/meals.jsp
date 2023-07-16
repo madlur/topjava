@@ -11,7 +11,7 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
-<a href="meal.jsp">Add Meal</a>
+<a href="meals?action=add">Add Meal</a>
 <p>
 
 <table border="1">
@@ -22,7 +22,6 @@
         <th></th>
         <th></th>
     </tr>
-    <c:set var="counter" value="0" scope="page"/>
     <c:forEach var="meal" items="${meals}">
         <tr style="color:${meal.excess ? 'red' : 'green'}">
             <td>
