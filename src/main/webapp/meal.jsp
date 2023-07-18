@@ -18,14 +18,7 @@
 <hr>
 <h2>Meals</h2>
 <p>
-    <c:choose>
-    <c:when test="${param.action =='update'}">
-<h3>Update meal</h3>
-</c:when>
-<c:otherwise>
-    <h3>Add meal</h3>
-</c:otherwise>
-</c:choose>
+<h3><c:out value="${param.action =='update' ? 'Update meal': 'Add meal'}"/></h3>
 <br/>
 <form method="POST" action='meals' name="addMeal">
     <table>

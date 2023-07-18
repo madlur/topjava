@@ -3,7 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.repository.InMemoryMealMapRepo;
+import ru.javawebinar.topjava.repository.InMemoryMealRepo;
 import ru.javawebinar.topjava.repository.MealRepo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -26,7 +26,7 @@ public class MealsServlet extends HttpServlet {
 
     @Override
     public void init() {
-        mealsRepo = new InMemoryMealMapRepo();
+        mealsRepo = new InMemoryMealRepo();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MealsServlet extends HttpServlet {
                 mealsRepo.delete(Integer.parseInt(mealId));
                 List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealsRepo.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
                 request.setAttribute("meals", mealsTo);
-                request.getRequestDispatcher("meals.jsp").forward(request, response);
+                response.sendRedirect("meals");
                 break;
             case ("update"):
                 log.debug("enter in case: update");
@@ -80,7 +80,7 @@ public class MealsServlet extends HttpServlet {
         } else {
             int id = Integer.parseInt(req.getParameter("id"));
             meal.setId(id);
-            mealsRepo.update(id, meal);
+            mealsRepo.update(meal);
             log.debug("meal has been updated");
         }
         resp.sendRedirect(req.getRequestURL().toString());

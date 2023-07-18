@@ -10,7 +10,7 @@ public interface MealRepo {
 
     Meal getById(int id);
 
-    void update(int id, Meal meal);
+    Meal update(Meal meal);
 
     void delete(int id);
 
