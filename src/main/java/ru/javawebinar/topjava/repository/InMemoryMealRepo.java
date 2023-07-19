@@ -34,7 +34,11 @@ public class InMemoryMealRepo implements MealRepo {
 
     @Override
     public Meal update(Meal meal) {
-        return mealMap.replace(meal.getId(), meal);
+        if (mealMap.containsKey(meal.getId())) {
+            mealMap.replace(meal.getId(), meal);
+            return meal;
+        }
+        return null;
     }
 
     @Override
