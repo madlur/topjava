@@ -21,9 +21,9 @@ public class InMemoryMealRepo implements MealRepo {
 
     @Override
     public Meal create(Meal meal) {
-        meal.setId(counter.get());
-        mealMap.put(counter.get(), meal);
-        increment();
+        int currentCounter = counter.getAndIncrement();
+        meal.setId(currentCounter);
+        mealMap.put(currentCounter, meal);
         return meal;
     }
 
@@ -34,11 +34,7 @@ public class InMemoryMealRepo implements MealRepo {
 
     @Override
     public Meal update(Meal meal) {
-        if (mealMap.get(meal.getId()) == null) {
-            return null;
-        } else {
-            return mealMap.put(meal.getId(), meal);
-        }
+        return mealMap.replace(meal.getId(), meal);
     }
 
     @Override
@@ -49,10 +45,6 @@ public class InMemoryMealRepo implements MealRepo {
     @Override
     public List<Meal> getAll() {
         return new ArrayList<>(mealMap.values());
-    }
-
-    private void increment() {
-        counter.incrementAndGet();
     }
 
     private void init() {

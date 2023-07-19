@@ -42,8 +42,6 @@ public class MealsServlet extends HttpServlet {
                 log.debug("enter in case: delete");
                 String mealId = request.getParameter("mealId");
                 mealsRepo.delete(Integer.parseInt(mealId));
-                List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealsRepo.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
-                request.setAttribute("meals", mealsTo);
                 response.sendRedirect("meals");
                 break;
             case ("update"):
@@ -59,7 +57,7 @@ public class MealsServlet extends HttpServlet {
                 break;
             default:
                 log.debug("enter in case: default");
-                mealsTo = MealsUtil.filteredByStreams(mealsRepo.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
+                List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealsRepo.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
                 request.setAttribute("meals", mealsTo);
                 request.getRequestDispatcher("meals.jsp").forward(request, response);
         }
